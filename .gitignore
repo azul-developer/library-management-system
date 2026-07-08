@@ -1,0 +1,18 @@
+# Variables de entorno
+.env
+!.env.example
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Java / Maven
+target/
+**/target/
+
+# Go
+bin/
+**/bin/
+
+# macOS
+.DS_Store
