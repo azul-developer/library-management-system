@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -81,6 +82,7 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
+    @Transactional
     public boolean tryReserve(UUID id) {
         int updated = bookJpaRepository.decrementAvailableCopies(id);
         return updated > 0;
