@@ -69,7 +69,10 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public void delete(Book book) {
-        bookJpaRepository.delete(BookEntityMapper.toEntity(book));
+        // Use deleteById to avoid passing an entity without the version
+        // (domain model doesn't carry the JPA `version` field) which
+        // could lead to optimistic locking mismatches when removing.
+        bookJpaRepository.deleteById(book.getId());
     }
 
     @Override

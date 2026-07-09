@@ -1,0 +1,17 @@
+[
+  {"isbn":"9780261103344","title":"The Hobbit","author":"J.R.R. Tolkien","publishedYear":1937,"genre":"Fantasy","totalCopies":3},
+  {"isbn":"9780141439600","title":"Pride and Prejudice","author":"Jane Austen","publishedYear":1813,"genre":"Romance","totalCopies":4},
+  {"isbn":"9780451524935","title":"1984","author":"George Orwell","publishedYear":1949,"genre":"Dystopia","totalCopies":5},
+  {"isbn":"9780140449136","title":"Meditations","author":"Marcus Aurelius","publishedYear":180,"genre":"Philosophy","totalCopies":3},
+  {"isbn":"9780307277671","title":"The Road","author":"Cormac McCarthy","publishedYear":2006,"genre":"Post-apocalyptic","totalCopies":2},
+  {"isbn":"9780140449266","title":"The Odyssey","author":"Homer","publishedYear":800,"genre":"Epic","totalCopies":3},
+  {"isbn":"9780143128540","title":"Sapiens","author":"Yuval Noah Harari","publishedYear":2011,"genre":"Non-fiction","totalCopies":4},
+  {"isbn":"9780307743657","title":"The Girl with the Dragon Tattoo","author":"Stieg Larsson","publishedYear":2005,"genre":"Thriller","totalCopies":3},
+  {"isbn":"9780061120084","title":"To Kill a Mockingbird","author":"Harper Lee","publishedYear":1960,"genre":"Fiction","totalCopies":5},
+  {"isbn":"9780307387899","title":"The Kite Runner","author":"Khaled Hosseini","publishedYear":2003,"genre":"Fiction","totalCopies":3},
+  {"isbn":"9780140449181","title":"The Iliad","author":"Homer","publishedYear":750,"genre":"Epic","totalCopies":3},
+  {"isbn":"9780553386790","title":"Thinking, Fast and Slow","author":"Daniel Kahneman","publishedYear":2011,"genre":"Psychology","totalCopies":4},
+  {"isbn":"9780590353427","title":"Harry Potter and the Sorcerer's Stone","author":"J.K. Rowling","publishedYear":1997,"genre":"Fantasy","totalCopies":6},
+  {"isbn":"9780679720201","title":"Beloved","author":"Toni Morrison","publishedYear":1987,"genre":"Fiction","totalCopies":2},
+  {"isbn":"9780307269751","title":"No Country for Old Men","author":"Cormac McCarthy","publishedYear":2005,"genre":"Thriller","totalCopies":2}
+]

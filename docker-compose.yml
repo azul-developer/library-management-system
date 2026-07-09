@@ -29,9 +29,29 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       SERVER_PORT: ${SERVER_PORT}
+      APP_SEED_ENABLED: ${APP_SEED_ENABLED}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      APP_SEED_TYPES: ${APP_SEED_TYPES}
 
     depends_on:
       - postgres
+
+  # Service to run integration tests using the Maven image. This service is
+  # intended to be invoked as a one-off (`docker compose run --rm library-service-test`).
+  library-service-test:
+    image: maven:3.9.6-eclipse-temurin-21
+    container_name: library-service-test
+    working_dir: /workspace
+    volumes:
+      - ./library-service:/workspace
+      - ~/.m2:/root/.m2
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+    command: mvn -DskipTests=false -Dtest=BookControllerIntegrationTest test
 
 volumes:
   postgres-data:

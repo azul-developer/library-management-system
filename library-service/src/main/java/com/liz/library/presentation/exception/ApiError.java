@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -16,6 +17,8 @@ public class ApiError {
     private String error;
 
     private String message;
+
+    private List<ValidationError> errors;
 
     private String path;
 }

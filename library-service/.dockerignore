@@ -1,0 +1,20 @@
+target/
+.git/
+.gitignore
+.idea/
+.vscode/
+*.iml
+logs/
+tmp/
+Dockerfile
+docker-compose.yml
+**/target/
+node_modules/
+*.log
+.DS_Store
+
+# Keep build-relevant files
+!pom.xml
+!mvnw
+!.mvn/**
+!src/**

@@ -1,0 +1,53 @@
+[
+  [
+    {
+      "firstName": "Alice",
+      "lastName": "Johnson",
+      "email": "alice.johnson@library.com",
+      "password": "Admin123!",
+      "roleName": "ADMIN"
+    },
+    {
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "email": "michael.brown@library.com",
+      "password": "Admin123!",
+      "roleName": "ADMIN"
+    },
+    {
+      "firstName": "Emma",
+      "lastName": "Wilson",
+      "email": "emma.wilson@example.com",
+      "password": "User123!",
+      "roleName": "USER"
+    },
+    {
+      "firstName": "Daniel",
+      "lastName": "Martinez",
+      "email": "daniel.martinez@example.com",
+      "password": "User123!",
+      "roleName": "USER"
+    },
+    {
+      "firstName": "Sophia",
+      "lastName": "Taylor",
+      "email": "sophia.taylor@example.com",
+      "password": "User123!",
+      "roleName": "USER"
+    },
+    {
+      "firstName": "James",
+      "lastName": "Anderson",
+      "email": "james.anderson@example.com",
+      "password": "User123!",
+      "roleName": "USER"
+    },
+    {
+      "firstName": "Olivia",
+      "lastName": "Thomas",
+      "email": "olivia.thomas@example.com",
+      "password": "User123!",
+      "roleName": "USER"
+    }
+  ]
+]

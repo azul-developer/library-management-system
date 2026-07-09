@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -55,7 +56,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookResponse> findAll(BookFilter filter, Pageable pageable) {
+    public PageResponse<BookResponse> findAll(BookFilter filter, Pageable pageable) {
 
         BookQuery domainQuery = BookQuery.of(
                 filter != null ? filter.getAuthor() : null,
@@ -65,7 +66,18 @@ public class BookServiceImpl implements BookService {
 
         Page<Book> books = bookRepository.findAllByQuery(domainQuery, pageable);
 
-        return books.map(bookMapper::toResponse);
+        List<BookResponse> content = books.getContent()
+                .stream()
+                .map(bookMapper::toResponse)
+                .toList();
+
+        return new PageResponse<>(
+            content,
+            books.getNumber(),
+            books.getSize(),
+            books.getTotalElements(),
+            books.getTotalPages()
+        );
     }
 
     @Override
