@@ -2,6 +2,7 @@ package com.liz.library.presentation.exception;
 
 
 import com.liz.library.domain.exception.BusinessException;
+import com.liz.library.domain.exception.InvalidCredentialsException;
 import com.liz.library.domain.message.MessageCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,6 +22,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import static com.liz.library.domain.message.MessageCodes.INVALID_CREDENTIALS;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -28,20 +33,31 @@ public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
 
-        @ExceptionHandler(BusinessException.class)
-        public ResponseEntity<ApiError> handleBusinessException(
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiError> handleBusinessException(
             BusinessException ex,
             HttpServletRequest request) {
 
         HttpStatus status = resolveStatus(ex.getCode());
 
         ApiError error = buildError(
-            status,
-            resolveMessage(ex.getCode()),
-            request.getRequestURI());
+                status,
+                resolveMessage(ex.getCode()),
+                request.getRequestURI());
 
         return new ResponseEntity<>(error, status);
-        }
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCredentials(
+            InvalidCredentialsException ex) {
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of(
+                        "code", INVALID_CREDENTIALS,
+                        "message", "Invalid email or password"
+                ));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -51,18 +67,18 @@ public class GlobalExceptionHandler {
         Locale locale = request.getLocale();
 
         List<ValidationError> errors = ex.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(fe -> new ValidationError(fe.getField(), messageSource.getMessage(fe, locale)))
-            .toList();
+                .getFieldErrors()
+                .stream()
+                .map(fe -> new ValidationError(fe.getField(), messageSource.getMessage(fe, locale)))
+                .toList();
 
         String message = "Validation failed";
 
         return buildError(
-            HttpStatus.BAD_REQUEST,
-            message,
-            request.getRequestURI(),
-            errors);
+                HttpStatus.BAD_REQUEST,
+                message,
+                request.getRequestURI(),
+                errors);
     }
 
     @ExceptionHandler(OptimisticLockingFailureException.class)

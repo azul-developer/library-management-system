@@ -86,6 +86,13 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toResponse(book);
     }
 
+    @Override
+    public boolean isAvailable(UUID id) {
+        Book book = loadBook(id);
+        Integer copies = book.getAvailableCopies();
+        return copies != null && copies > 0;
+    }
+
 
     @Override
     public BookResponse update(UUID id, CreateBookRequest request) {

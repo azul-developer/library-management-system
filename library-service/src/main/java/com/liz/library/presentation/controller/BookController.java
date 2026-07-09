@@ -45,7 +45,7 @@ public class BookController {
         return bookService.create(request);
     }
 
-   @Operation(
+    @Operation(
             summary = "Retrieve all books",
             description = "Returns a paginated list of books with optional filters(author, genre, and availability)."
     )
@@ -161,4 +161,12 @@ public class BookController {
 
         // TODO: Implement reservation
     }
+
+    @Operation(summary = "Get book availability (internal)")
+    @GetMapping("/{id}/availability")
+    public boolean availability(@Parameter(description = "Book identifier")
+                                @PathVariable UUID id) {
+        return bookService.isAvailable(id);
+    }
+
 }

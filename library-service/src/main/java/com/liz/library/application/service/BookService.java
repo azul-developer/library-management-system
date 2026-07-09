@@ -16,6 +16,8 @@ public interface BookService {
 
     BookResponse findById(UUID id);
 
+    boolean isAvailable(UUID id);
+
     BookResponse update(UUID id, CreateBookRequest request);
 
     BookResponse partialUpdate(UUID id, UpdateBookRequest request);
