@@ -12,4 +12,8 @@ public interface BookJpaRepository extends JpaRepository<BookEntity, UUID>, JpaS
     Optional<BookEntity> findByIsbn(String isbn);
 
     boolean existsByIsbn(String isbn);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.data.jpa.repository.Query("UPDATE BookEntity b SET b.availableCopies = b.availableCopies - 1 WHERE b.id = :id AND b.availableCopies > 0")
+    int decrementAvailableCopies(@org.springframework.data.repository.query.Param("id") UUID id);
 }

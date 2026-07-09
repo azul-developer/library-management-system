@@ -29,12 +29,39 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       SERVER_PORT: ${SERVER_PORT}
+      LOAN_SERVICE_URL: ${LOAN_SERVICE_URL:-http://loan-service:8081}
       APP_SEED_ENABLED: ${APP_SEED_ENABLED}
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       APP_SEED_TYPES: ${APP_SEED_TYPES}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
 
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 6
+
+  loan-service:
+    build: ./loan-service
+
+    container_name: loan-service
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      LOAN_DATABASE_URL: ${LOAN_DATABASE_URL}
+      LIBRARY_SERVICE_URL: http://library-service:8080
+
+    depends_on:
+      postgres:
+        condition: service_started
+      library-service:
+        condition: service_healthy
 
   # Service to run integration tests using the Maven image. This service is
   # intended to be invoked as a one-off (`docker compose run --rm library-service-test`).

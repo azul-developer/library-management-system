@@ -13,6 +13,7 @@ public interface BookRepository {
     Book save(Book book);
 
     Optional<Book> findById(UUID id);
+
     /**
      * Find books with optional filters and pagination (domain-level query).
      */
@@ -21,4 +22,6 @@ public interface BookRepository {
     void delete(Book book);
 
     boolean existsByIsbn(String isbn);
+
+    boolean tryReserve(UUID id);
 }

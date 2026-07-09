@@ -9,7 +9,9 @@ import com.liz.library.domain.message.MessageCodes;
 import com.liz.library.domain.model.Book;
 import com.liz.library.domain.query.BookQuery;
 import com.liz.library.domain.repository.BookRepository;
+import com.liz.library.infrastructure.client.LoanClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
@@ -24,6 +27,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookFactory bookFactory;
     private final BookMapper bookMapper;
+    private final LoanClient loanClient;
 
     private Book loadBook(UUID id) {
         return bookRepository.findById(id)
@@ -72,11 +76,11 @@ public class BookServiceImpl implements BookService {
                 .toList();
 
         return new PageResponse<>(
-            content,
-            books.getNumber(),
-            books.getSize(),
-            books.getTotalElements(),
-            books.getTotalPages()
+                content,
+                books.getNumber(),
+                books.getSize(),
+                books.getTotalElements(),
+                books.getTotalPages()
         );
     }
 
@@ -152,5 +156,21 @@ public class BookServiceImpl implements BookService {
     public void delete(UUID id) {
         Book book = loadBook(id);
         bookRepository.delete(book);
+    }
+
+    @Override
+    public LoanResponse createLoan(UUID userId, UUID bookId) {
+        LoanResponse loanResponse = loanClient.createLoan(userId, bookId);
+        if (!bookRepository.tryReserve(bookId)) {
+            log.error(
+                    "Loan {} was created, but inventory update failed for book {}. Manual reconciliation may be required.",
+                    loanResponse.getId(),
+                    bookId);
+
+            // TODO: Implement a compensating action or a reconciliation process
+            // to synchronize the inventory with the loan service.
+        }
+
+        return loanResponse;
     }
 }

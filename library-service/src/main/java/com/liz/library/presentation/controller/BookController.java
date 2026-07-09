@@ -6,6 +6,7 @@ import com.liz.library.application.dto.PageResponse;
 import com.liz.library.application.dto.CreateBookRequest;
 import com.liz.library.application.dto.UpdateBookRequest;
 import com.liz.library.application.service.BookService;
+import com.liz.library.domain.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -18,13 +19,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.liz.library.presentation.exception.ApiError;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -58,20 +62,17 @@ public class BookController {
             @Parameter(
                     name = "page",
                     in = ParameterIn.QUERY,
-                    description = "Zero-based page index",
-                    example = "0"
+                    description = "Zero-based page index. Example: 0"
             ),
             @Parameter(
                     name = "size",
                     in = ParameterIn.QUERY,
-                    description = "Number of records per page",
-                    example = "10"
+                    description = "Number of records per page. Example: 10"
             ),
             @Parameter(
                     name = "sort",
                     in = ParameterIn.QUERY,
-                    description = "Sorting criteria. Format: property,(asc|desc)",
-                    example = "title,asc"
+                    description = "Sorting criteria. Format: property,(asc|desc). Example: title,asc"
             )
     })
     @GetMapping
@@ -147,20 +148,37 @@ public class BookController {
         bookService.delete(id);
     }
 
-    @Operation(summary = "Reserve a copy of a book")
+    @Operation(
+            summary = "Reserve a book",
+            description = "Creates a loan for the authenticated user. The user identifier is obtained from the authenticated session."
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Book reserved successfully"),
             @ApiResponse(responseCode = "404", description = "Book not found", content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "409", description = "No copies available", content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    @PostMapping("/{id}/reserve")
-    @ResponseStatus(HttpStatus.OK)
-    public void reserve(
-            @Parameter(description = "Book identifier")
-            @PathVariable UUID id) {
 
-        // TODO: Implement reservation
-    }
+
+
+        @PostMapping("/{id}/reserve")
+        @ResponseStatus(HttpStatus.OK)
+        public void reserve(
+                @Parameter(description = "Book identifier")
+                @PathVariable UUID id,
+                @AuthenticationPrincipal User user) {
+
+            log.info("Reserve endpoint invoked. BookId={}", id);
+            log.info("Authenticated principal: {}", user);
+
+            if (user == null) {
+                log.error("Authenticated user is null");
+                throw new IllegalStateException("Authenticated user is null");
+            }
+
+            log.info("Authenticated user id={}", user.getId());
+
+            bookService.createLoan(user.getId(), id);
+        }
 
     @Operation(summary = "Get book availability (internal)")
     @GetMapping("/{id}/availability")

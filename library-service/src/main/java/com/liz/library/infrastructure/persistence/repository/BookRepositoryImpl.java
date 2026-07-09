@@ -79,4 +79,10 @@ public class BookRepositoryImpl implements BookRepository {
     public boolean existsByIsbn(String isbn) {
         return bookJpaRepository.existsByIsbn(isbn);
     }
+
+    @Override
+    public boolean tryReserve(UUID id) {
+        int updated = bookJpaRepository.decrementAvailableCopies(id);
+        return updated > 0;
+    }
 }

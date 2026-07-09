@@ -23,4 +23,6 @@ public interface BookService {
     BookResponse partialUpdate(UUID id, UpdateBookRequest request);
 
     void delete(UUID id);
+
+    LoanResponse createLoan(UUID userId, UUID bookId);
 }
